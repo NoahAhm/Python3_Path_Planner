@@ -20,16 +20,16 @@ def generate_plan_file(graph, start, goal, path, algo="", out_name="out.planner"
     """
     print(f"Saving planning data to file: {out_name}")
 
-    path_data = [[cell.i, cell.j] for cell in path]
-    visited_cells_data = [[cell.i, cell.j] for cell in graph.visited_cells]
+    path_data = [[int(cell.i), int(cell.j)] for cell in path]
+    visited_cells_data = [[int(cell.i), int(cell.j)] for cell in graph.visited_cells]
 
     plan = {
         "path": path_data,
         "visited_cells": visited_cells_data,
         "dt": [],
         "map": graph.as_string(),  # assuming mapAsString(graph) is equivalent to self.map_as_string()
-        "start": [start.i, start.j],
-        "goal": [goal.i, goal.j],
+        "start": [int(start.i), int(start.j)],
+        "goal": [int(goal.i), int(goal.j)],
         "planning_algo": algo
     }
 

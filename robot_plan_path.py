@@ -37,6 +37,7 @@ if __name__ == "__main__":
 
     path = []
     # TODO: Call graph search function and put the result in path.
+    path = breadth_first_search(graph, start, goal)
 
     # Send the path to the robot.
     print(f"Found path of length {len(path)}. Driving to the goal!")

@@ -46,6 +46,10 @@ class GridGraph:
         self.visited_cells = []  # Stores which cells have been visited in order for visualization.
 
         # TODO: Define any additional member variables to store node data.
+        self.visited = None 
+        self.distance = None 
+        self.parent_i = None 
+        self.parent_j = None 
 
     def as_string(self):
         """Returns the map data as a string for visualization."""
@@ -155,7 +159,13 @@ class GridGraph:
         None if the node has no parent. This function is used to trace back the
         path after graph search."""
         # TODO (P3): Return the parent of the node at the cell.
-        return None
+        if self.parent_i is None or self.parent_j is None:
+            return None
+        pi = self.parent_i[cell.j, cell.i]
+        pj = self.parent_j[cell.j, cell.i]
+        if pi < 0 or pj < 0:
+            return None
+        return Cell(pi, pj)
 
     def init_graph(self):
         """Initializes the node data in the graph in preparation for graph search.
@@ -167,6 +177,11 @@ class GridGraph:
         self.visited_cells = []  # Reset visited cells for visualization.
 
         # TODO (P3): Initialize your graph nodes.
+        self.visited = np.zeros((self.height, self.width), dtype=bool)
+        self.distance = np.full((self.height, self.width), np.inf, dtype=float)
+        self.parent_i = np.full((self.height, self.width), -1, dtype=int)
+        self.parent_j = np.full((self.height, self.width), -1, dtype=int)
+
 
     def find_neighbors(self, i, j):
         """Returns a list of the neighbors of the given cell. This should not
@@ -175,6 +190,12 @@ class GridGraph:
         # TODO (P3): Return a list of the indices of all the neighbors of the node
         # at cell (i, j). You should not include any cells that are outside of the
         # bounds of the graph.
-
-        # HINT: The function is_cell_in_bounds() might come in handy.
+        if i > 0:
+            nbrs.append((i - 1, j))
+        if i + 1 < self.width:
+            nbrs.append((i + 1, j))
+        if j > 0:
+            nbrs.append((i, j - 1))
+        if j + 1 < self.height:
+            nbrs.append((i, j + 1))
         return nbrs

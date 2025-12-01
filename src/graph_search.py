@@ -1,4 +1,5 @@
 import numpy as np
+from collections import deque
 from .graph import Cell
 from .utils import trace_path
 
@@ -47,7 +48,31 @@ def breadth_first_search(graph, start, goal):
     """
     graph.init_graph()  # Make sure all the node values are reset.
 
-    """TODO (P3): Implement BFS."""
+    # Reject immediately if start or goal are in collision.
+    if graph.check_collision(start.i, start.j) or graph.check_collision(goal.i, goal.j):
+        return []
+
+    frontier = deque()
+    frontier.append(start)
+    graph.visited[start.j, start.i] = True
+    graph.distance[start.j, start.i] = 0.0
+    graph.visited_cells.append(Cell(start.i, start.j))
+
+    while frontier:
+        cell = frontier.popleft()
+        if cell.i == goal.i and cell.j == goal.j:
+            return trace_path(cell, graph)
+
+        for ni, nj in graph.find_neighbors(cell.i, cell.j):
+            if graph.visited[nj, ni] or graph.check_collision(ni, nj):
+                continue
+            graph.visited[nj, ni] = True
+            graph.distance[nj, ni] = graph.distance[cell.j, cell.i] + 1
+            graph.parent_i[nj, ni] = cell.i
+            graph.parent_j[nj, ni] = cell.j
+            next_cell = Cell(ni, nj)
+            graph.visited_cells.append(next_cell)
+            frontier.append(next_cell)
 
     # If no path was found, return an empty list.
     return []
